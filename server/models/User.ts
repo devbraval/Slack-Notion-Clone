@@ -5,9 +5,9 @@ export interface IUser extends Document{
     password:string,
     userName:string,
     role:"user"|"manager"|"admin",
-    otp?:string,
-    otpExpiry?:Date,
-    otpPurpose?:"LOGIN"|"FORRESETPASS",
+    otp:string|null,
+    otpExpiry?:Date|null,
+    // otpPurpose?:"LOGIN"|"FORRESETPASS",
 
 
 }
@@ -41,10 +41,10 @@ const userSchma = new Schema<IUser>({
         type:Date,
 
     },
-    otpPurpose:{
-        type:String,
-        enum:["login","signUp"],
-    }
+    // otpPurpose:{
+    //     type:String,
+    //     enum:["login","signUp"],
+    // }
 },{
     timestamps:true,
 });
