@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
+import jwt,{JwtPayload} from "jsonwebtoken";
 
 const auth = (
     req: Request,
@@ -19,7 +19,7 @@ const auth = (
         const decoded = jwt.verify(
             token,
             process.env.JWT_SECRET!
-        );
+        ) as JwtPayload & {id:string};
 
         req.user = decoded;
 

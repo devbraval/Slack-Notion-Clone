@@ -5,8 +5,8 @@ import User from "../models/User";
 import sendOtp from "../utils/sendOtp";
 import genrateOtp from "../utils/gentareOtp";
 import bcrypt from "bcrypt";
-import redisClient from "../redis.ts";
-import generateToken from "../utils/generateToken.ts";
+import redisClient from "../redis";
+import generateToken from "../utils/generateToken";
 interface SignUpBody{
     email:string,
     password:string,
