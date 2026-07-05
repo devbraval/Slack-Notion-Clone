@@ -13,6 +13,11 @@ function Login() {
         e.preventDefault();
         if(isDisable)return;
         startCooldown();
+        try{
+
+        }catch(err){
+            
+        }
     }
     
   return (
