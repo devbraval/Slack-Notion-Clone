@@ -1,22 +1,42 @@
 import React, { useState } from 'react'
-import useCooldown from '../../hooks/useCooldown';
+import useCooldown from '../hooks/useCooldown';
+import Message from './Message';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faEye,faEyeSlash} from "@fortawesome/free-solid-svg-icons";
 function Login() {
-    const [name,setName] = useState("");
+    const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
     const[showPass,setShowPass]= useState(false);
     const [message,setMessage] = useState("");
+    const [success,setSuccess] = useState(false);
     const toggel = ()=>{
         setShowPass(!showPass);
     }
     const {isDisable,startCooldown,cooldown} = useCooldown(10);
-    const handleLogin = (e)=>{
+    const handleLogin = async(e)=>{
         e.preventDefault();
         if(isDisable)return;
         startCooldown();
         try{
+          const res = await fetch("http://localhost:8080/login",{
+            method:"POST",
+            headers:{
+              "Content-type" : "application/json",
+            },
+            body:JSON.stringify({email,password})
+          });
+
+          const data = await res.json();
+          if(!data.success){
+            setMessage("Login Failed" || data.message);
+            setSuccess(false);
+            return ;
+          }
+          setMessage("Login successfully" || data.message);
+          setSuccess(true);
 
         }catch(err){
-            
+            setMessage("Somthing went wrong");
         }
     }
     
@@ -45,6 +65,7 @@ function Login() {
         <p className="text-gray-400 text-center mt-2 mb-8">
           Sign in to your  account
         </p>
+        <Message message={message} success={success} setMessage={setMessage}/>
 
         {/* Email */}
 
@@ -57,7 +78,7 @@ function Login() {
           <input
             type="email"
             placeholder="name@example.com"
-            onChange={(e)=>{setName(e.target.value)}}
+            onChange={(e)=>{setEmail(e.target.value)}}
             className="w-full rounded-xl bg-[#1F2937] border border-gray-700 px-4 py-3 text-white placeholder-gray-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition"
           />
 
@@ -82,7 +103,7 @@ function Login() {
           <div className="relative">
 
             <input
-              type="password"
+              type={showPass ? "text" :"password"}
               placeholder="••••••••"
               onChange={(e)=>{setPassword(e.target.vaule)}}
               className="w-full rounded-xl bg-[#1F2937] border border-gray-700 px-4 py-3 pr-12 text-white placeholder-gray-500 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 transition"
@@ -90,8 +111,9 @@ function Login() {
 
             <button
               className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+              onClick={toggel}
             >
-              👁
+              <FontAwesomeIcon icon={showPass?faEyeSlash:faEye}/>
             </button>
 
           </div>
